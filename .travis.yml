@@ -16,7 +16,7 @@ install:
 script:
  
   # Ansible syntax check.
-   - ansible-playbook -i test/inventory test/httpd.yml test/ntp.yml --syntax-check
+   - ansible-playbook -i test/inventory test/httpd.yml --syntax-check
 
   # Test role.
    - "ansible-playbook -i test/inventory test/httpd.yml --connection=local --sudo"
