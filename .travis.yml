@@ -18,15 +18,15 @@ script:
  
 
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml --syntax-check'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml test/httpd.yml --syntax-check'
 
   # Test role.
-   - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+   - ansible-playbook -i test/inventory test/httpd.yml --syntax-check
 
   # Test role idempotence.
  # Run the role/playbook again, checking to make sure it's idempotent.
    - >
-     ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+     ansible-playbook -i test/inventory test/httpd.yml --connection=local --sudo
      | grep -q 'changed=0.*failed=0'
      && (echo 'Idempotence test: pass' && exit 0)
      || (echo 'Idempotence test: fail' && exit 1)
