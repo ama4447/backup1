@@ -16,10 +16,10 @@ install:
 script:
  
   # Ansible syntax check.
-   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml test/httpd.yml --syntax-check'
+   - ansible-playbook -i test/inventory test/httpd.yml test/ntp.yml --syntax-check
 
   # Test role.
-   - ansible-playbook -i test/inventory test/httpd.yml --syntax-check
+   - "ansible-playbook -i test/inventory test/httpd.yml --connection=local --sudo"
 
   # Test role idempotence.
  # Run the role/playbook again, checking to make sure it's idempotent.
