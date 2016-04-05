@@ -5,7 +5,7 @@ sudo: required
 script:
  
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml test/httpd.yml --syntax-check'
+   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml test/httpd.yml --syntax-check'
 
   # Test role.
    - ansible-playbook -i test/inventory test/httpd.yml --syntax-check
