@@ -16,7 +16,6 @@ services:
  
 script:
  
-
   # Ansible syntax check.
   - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml test/httpd.yml --syntax-check'
 
