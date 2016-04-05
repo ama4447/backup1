@@ -10,14 +10,7 @@ env:
     version: 7
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  - distribution: ubuntu
-    version: 14.04
-    init: /sbin/init
-    run_opts: ""
-  - distribution: ubuntu
-    version: 12.04
-    init: /sbin/init
-    run_opts: ""
+
 
 services:
  
@@ -25,19 +18,20 @@ script:
  
 
   # Ansible syntax check.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test.yml --syntax-check'
+  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook test/ntp.yml --syntax-check'
 
   # Test role.
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml'
+   - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
 
   # Test role idempotence.
-  - >
-    sudo docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
-    | grep -q 'changed=0.*failed=0'
-    && (echo 'Idempotence test: pass' && exit 0)
-    || (echo 'Idempotence test: fail' && exit 1)
-  # Clean up
-  - 'sudo docker stop "$(cat ${container_id})"'
+ # Run the role/playbook again, checking to make sure it's idempotent.
+   - >
+     ansible-playbook -i tests/inventory tests/test.yml --connection=local --sudo
+     | grep -q 'changed=0.*failed=0'
+     && (echo 'Idempotence test: pass' && exit 0)
+     || (echo 'Idempotence test: fail' && exit 1)
+# Request a page via the web server, to make sure it's running and responds.
+   - "curl http://localhost/"
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
