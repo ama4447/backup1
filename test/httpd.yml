@@ -1,5 +1,5 @@
 ---
-- hosts: web
+- hosts: localhost
   #user: student
   sudo: yes
   vars:
